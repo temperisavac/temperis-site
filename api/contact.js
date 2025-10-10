@@ -4,19 +4,14 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
-
   try {
-    const body = req.body || {};
-    const { nome, email, telefone, local, quantidade, mensagem } = body;
+    const { nome, email, telefone, local, quantidade, mensagem } = req.body || {};
 
     const transporter = nodemailer.createTransport({
       host: process.env.TEMPERIS_EMAIL_HOST,
       port: Number(process.env.TEMPERIS_EMAIL_PORT || 587),
       secure: String(process.env.TEMPERIS_EMAIL_SECURE || 'false') === 'true',
-      auth: {
-        user: process.env.TEMPERIS_EMAIL_USER,
-        pass: process.env.TEMPERIS_EMAIL_PASS,
-      },
+      auth: { user: process.env.TEMPERIS_EMAIL_USER, pass: process.env.TEMPERIS_EMAIL_PASS },
     });
 
     const html = `
@@ -32,7 +27,7 @@ module.exports = async (req, res) => {
 
     await transporter.sendMail({
       from: `TEMPERIS Website <${process.env.TEMPERIS_EMAIL_USER}>`,
-      to: process.env.TEMPERIS_EMAIL_TO,
+      to: process.env.TEMPERIS_EMAIL_TO || 'temperisavac@gmail.com',
       subject: 'Pedido de orçamento - TEMPERIS',
       html,
     });
