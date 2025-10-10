@@ -1,7 +1,7 @@
 import React from 'react'
 import Testimonial from './components/Testimonial.jsx'
-import logoUrl from '../assets/logo.svg'
-import heroUrl from '../assets/hero-avac.jpg'
+import logoUrl from './assets/logo.png'
+import heroUrl from './assets/hero-avac.png'
 
 export default function App() {
   return (
