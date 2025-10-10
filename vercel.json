@@ -5,8 +5,8 @@
       "runtime": "nodejs18.x"
     }
   },
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "api/contact.js", "use": "@vercel/node" }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
