@@ -1,26 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import logoUrl from "./assets/logo.png?v=4";
 import heroUrl from "./assets/hero-avac.png?v=4";
 import "./styles.css";
 
 function App() {
+  const [showOverlay, setShowOverlay] = useState(false);
+
   useEffect(() => {
-    // Criar script Calendly
     const script = document.createElement("script");
     script.src = "https://assets.calendly.com/assets/external/widget.js";
     script.async = true;
     document.body.appendChild(script);
 
-    // Função para abrir popup
     const handleCalendlyOpen = () => {
+      setShowOverlay(true);
       if (window.Calendly) {
         window.Calendly.initPopupWidget({ url: "https://calendly.com/temperis" });
       } else {
         window.open("https://calendly.com/temperis", "_blank");
       }
+      setTimeout(() => setShowOverlay(false), 2000); // desaparece após 2 segundos
     };
 
-    // Esperar que o botão exista e adicionar evento
     const interval = setInterval(() => {
       const button = document.getElementById("open-calendly");
       if (button) {
@@ -29,7 +30,6 @@ function App() {
       }
     }, 500);
 
-    // Limpeza
     return () => {
       clearInterval(interval);
       const button = document.getElementById("open-calendly");
@@ -38,7 +38,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div className="relative">
       {/* Hero Section */}
       <section className="relative text-center bg-gray-100 py-20">
         <img src={heroUrl} alt="Hero" className="mx-auto rounded-2xl shadow-lg w-4/5" />
@@ -49,7 +49,7 @@ function App() {
       </section>
 
       {/* Agendamento */}
-      <section id="agendamento" className="py-16 bg-white text-center">
+      <section id="agendamento" className="py-16 bg-white text-center relative z-10">
         <h2 className="text-3xl font-bold mb-6">Agende a sua manutenção</h2>
         <p className="mb-4 text-gray-700">
           Escolha o melhor horário para si e agende a manutenção do seu sistema AVAC de forma simples e rápida.
@@ -61,6 +61,11 @@ function App() {
           Agendar agora
         </button>
       </section>
+
+      {/* Overlay com animação */}
+      {showOverlay && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn z-50"></div>
+      )}
     </div>
   );
 }
