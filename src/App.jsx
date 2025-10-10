@@ -104,14 +104,19 @@ export default function App() {
   <p className="mb-4 text-gray-700">
     Escolha o melhor horário para si e agende a manutenção do seu sistema AVAC de forma simples e rápida.
   </p>
-  <iframe
-    src="https://calendly.com/temperis"
-    width="100%"
-    height="700"
-    frameBorder="0"
-    allowtransparency="true"
-  ></iframe>
+  <div className="flex justify-center">
+    <iframe
+      src="https://calendly.com/temperis?embed_domain=temperis.pt&embed_type=Inline"
+      width="90%"
+      height="700"
+      frameBorder="0"
+      allow="camera; microphone; fullscreen"
+      allowtransparency="true"
+      title="Calendly TEMPERIS"
+    ></iframe>
+  </div>
 </section>
+
 
 
       <section id="testemunhos" className="py-16 md:py-20 bg-gray-50">
