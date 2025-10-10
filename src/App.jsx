@@ -133,9 +133,8 @@ export default function App() {
             <input name="telefone" placeholder="Telefone (opcional)" className="px-4 py-3 rounded-xl border outline-brand-700" />
             <input required name="local" placeholder="Local/Concelho" className="px-4 py-3 rounded-xl border outline-brand-700" />
             <select name="quantidade" className="px-4 py-3 rounded-xl border outline-brand-700">
-              <option value="1">1 máquina</option>
-              <option value="2">2 máquinas</option>
-              <option value="3">Mais de 2 máquinas</option>
+              <option value="3">3 máquinas</option>
+              <option value="4">Mais de 3 máquinas</option>
             </select>
             <textarea required name="mensagem" rows="4" placeholder="Descreva o pedido..." className="px-4 py-3 rounded-xl border outline-brand-700 md:col-span-2"></textarea>
             <button className="px-6 py-3 rounded-xl bg-brand-700 hover:bg-brand-600 text-white font-semibold md:col-span-2">Enviar pedido</button>
