@@ -5,24 +5,35 @@ import "./styles.css";
 
 function App() {
   useEffect(() => {
+    // Criar script Calendly
     const script = document.createElement("script");
     script.src = "https://assets.calendly.com/assets/external/widget.js";
     script.async = true;
     document.body.appendChild(script);
 
-    const button = document.getElementById("open-calendly");
-    if (button) {
-      button.addEventListener("click", () => {
-        if (window.Calendly) {
-          window.Calendly.initPopupWidget({ url: "https://calendly.com/temperis" });
-        } else {
-          window.open("https://calendly.com/temperis", "_blank");
-        }
-      });
-    }
+    // Função para abrir popup
+    const handleCalendlyOpen = () => {
+      if (window.Calendly) {
+        window.Calendly.initPopupWidget({ url: "https://calendly.com/temperis" });
+      } else {
+        window.open("https://calendly.com/temperis", "_blank");
+      }
+    };
 
+    // Esperar que o botão exista e adicionar evento
+    const interval = setInterval(() => {
+      const button = document.getElementById("open-calendly");
+      if (button) {
+        button.addEventListener("click", handleCalendlyOpen);
+        clearInterval(interval);
+      }
+    }, 500);
+
+    // Limpeza
     return () => {
-      if (button) button.removeEventListener("click", () => {});
+      clearInterval(interval);
+      const button = document.getElementById("open-calendly");
+      if (button) button.removeEventListener("click", handleCalendlyOpen);
     };
   }, []);
 
@@ -32,7 +43,9 @@ function App() {
       <section className="relative text-center bg-gray-100 py-20">
         <img src={heroUrl} alt="Hero" className="mx-auto rounded-2xl shadow-lg w-4/5" />
         <h1 className="text-4xl font-bold mt-8">Manutenção e Soluções AVAC</h1>
-        <p className="text-gray-700 mt-3">Serviço profissional e poupança garantida na sua fatura de energia.</p>
+        <p className="text-gray-700 mt-3">
+          Serviço profissional e poupança garantida na sua fatura de energia.
+        </p>
       </section>
 
       {/* Agendamento */}
