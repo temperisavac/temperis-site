@@ -3,7 +3,7 @@ import Testimonial from './components/Testimonial.jsx'
 import logoUrl from './assets/logo.png?v=4';
 import heroUrl from './assets/hero-avac.png?v=4';
 
-import React, { useEffect } from "react";
+
 
 useEffect(() => {
   const script = document.createElement("script");
