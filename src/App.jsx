@@ -7,33 +7,42 @@ function App() {
   const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
+    // Adicionar script Calendly
     const script = document.createElement("script");
     script.src = "https://assets.calendly.com/assets/external/widget.js";
     script.async = true;
     document.body.appendChild(script);
 
-    const handleCalendlyOpen = () => {
+    // Funções de controlo
+    const openCalendly = () => {
       setShowOverlay(true);
-      if (window.Calendly) {
-        window.Calendly.initPopupWidget({ url: "https://calendly.com/temperis" });
-      } else {
-        window.open("https://calendly.com/temperis", "_blank");
-      }
-      setTimeout(() => setShowOverlay(false), 2000); // desaparece após 2 segundos
+      window.Calendly.initPopupWidget({ url: "https://calendly.com/temperis" });
     };
 
+    const closeCalendly = () => setShowOverlay(false);
+
+    // Ouvir quando Calendly fecha o widget
+    window.addEventListener("message", (event) => {
+      if (event.data?.event === "calendly.event_scheduled" || event.data?.event === "calendly.close") {
+        closeCalendly();
+      }
+    });
+
+    // Aguardar botão e associar evento
     const interval = setInterval(() => {
       const button = document.getElementById("open-calendly");
       if (button) {
-        button.addEventListener("click", handleCalendlyOpen);
+        button.addEventListener("click", openCalendly);
         clearInterval(interval);
       }
     }, 500);
 
+    // Limpeza
     return () => {
       clearInterval(interval);
       const button = document.getElementById("open-calendly");
-      if (button) button.removeEventListener("click", handleCalendlyOpen);
+      if (button) button.removeEventListener("click", openCalendly);
+      window.removeEventListener("message", closeCalendly);
     };
   }, []);
 
@@ -62,9 +71,15 @@ function App() {
         </button>
       </section>
 
-      {/* Overlay com animação */}
+      {/* Overlay elegante e reativo */}
       {showOverlay && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn z-50"></div>
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn z-50 flex items-center justify-center"
+          onClick={() => {
+            setShowOverlay(false);
+            if (window.Calendly) window.Calendly.closePopupWidget();
+          }}
+        ></div>
       )}
     </div>
   );
