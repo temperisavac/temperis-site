@@ -3,6 +3,23 @@ import Testimonial from './components/Testimonial.jsx'
 import logoUrl from './assets/logo.png?v=4';
 import heroUrl from './assets/hero-avac.png?v=4';
 
+import React, { useEffect } from "react";
+
+useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://assets.calendly.com/assets/external/widget.js";
+  script.async = true;
+  document.body.appendChild(script);
+
+  const button = document.getElementById("open-calendly");
+  button.addEventListener("click", () => {
+    window.Calendly.initPopupWidget({ url: "https://calendly.com/temperis" });
+  });
+
+  return () => {
+    button.removeEventListener("click", () => {});
+  };
+}, []);
 
 export default function App() {
   return (
@@ -104,18 +121,15 @@ export default function App() {
   <p className="mb-4 text-gray-700">
     Escolha o melhor horário para si e agende a manutenção do seu sistema AVAC de forma simples e rápida.
   </p>
-  <div className="flex justify-center">
-    <iframe
-      src="https://calendly.com/temperis?embed_domain=temperis.pt&embed_type=Inline"
-      width="90%"
-      height="700"
-      frameBorder="0"
-      allow="camera; microphone; fullscreen"
-      allowtransparency="true"
-      title="Calendly TEMPERIS"
-    ></iframe>
-  </div>
+
+  <button
+    id="open-calendly"
+    className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
+  >
+    Agendar agora
+  </button>
 </section>
+
 
 
 
