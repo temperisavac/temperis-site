@@ -1,11 +1,12 @@
 {
-  "version": 3,
-  "buildCommand": "",
-  "outputDirectory": ".",
+  "version": 2,
   "functions": {
     "api/contact.js": {
       "runtime": "nodejs18.x"
     }
-  }
+  },
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "api/contact.js", "use": "@vercel/node" }
+  ]
 }
-
