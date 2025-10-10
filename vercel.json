@@ -1,8 +1,11 @@
 {
-  "version": 2,
+  "version": 3,
+  "buildCommand": "",
+  "outputDirectory": ".",
   "functions": {
     "api/contact.js": {
       "runtime": "nodejs18.x"
     }
   }
 }
+
