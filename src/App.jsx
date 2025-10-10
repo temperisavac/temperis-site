@@ -99,18 +99,20 @@ export default function App() {
         </div>
       </section>
 
-      <section id="agendar" className="py-16 md:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold">Agendar manutenção</h2>
-          <p className="mt-2 text-gray-600">Escolha a data e hora que mais lhe convém.</p>
-          <div className="mt-8">
-            <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
-            <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-            <div className="w-full h-[720px] rounded-2xl overflow-hidden border" data-url="https://calendly.com/temperis" id="calendly-embed"></div>
-            <script dangerouslySetInnerHTML={{__html:`window.addEventListener('load',function(){const el=document.getElementById('calendly-embed');if(el&&window.Calendly){Calendly.initInlineWidget({url:el.getAttribute('data-url'),parentElement:el});}});`}} />
-          </div>
-        </div>
-      </section>
+      <section id="agendamento" className="py-16 bg-gray-100 text-center">
+  <h2 className="text-3xl font-bold mb-6">Agende a sua manutenção</h2>
+  <p className="mb-4 text-gray-700">
+    Escolha o melhor horário para si e agende a manutenção do seu sistema AVAC de forma simples e rápida.
+  </p>
+  <iframe
+    src="https://calendly.com/temperis"
+    width="100%"
+    height="700"
+    frameBorder="0"
+    allowtransparency="true"
+  ></iframe>
+</section>
+
 
       <section id="testemunhos" className="py-16 md:py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
