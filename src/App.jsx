@@ -8,10 +8,35 @@ import "./styles.css";
 import emailjs from "emailjs-com";
 
 const CALENDLY_URL = "https://calendly.com/temperisavac";
-
-export default function App() {
+ 
+  export default function App() {
   const [showOverlay, setShowOverlay] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // 🔹 Função para enviar o formulário de orçamento via EmailJS
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    emailjs
+  .sendForm(
+    "service_pjxsdwi",
+    "template_ruhg289", // ✅ o teu template ID real
+    e.target,
+    "okg9eystknLnKS2hx" // ✅ a tua public key
+  )
+
+      .then(
+        () => {
+          alert("✅ Pedido enviado com sucesso! Entraremos em contacto em breve.");
+          e.target.reset();
+        },
+        (error) => {
+          console.error("Erro ao enviar:", error.text);
+          alert("❌ Ocorreu um erro ao enviar. Tente novamente.");
+        }
+      );
+  };
+
 
   // Efeito de sombra, transparência e atualização da classe <body> ao fazer scroll
 useEffect(() => {
@@ -355,87 +380,102 @@ const openCalendly = useCallback(() => {
 
 
       {/* PEDIDO DE ORÇAMENTO */}
-<section id="orcamento" className="bg-gray-50 py-20 px-6 text-center">
+<section
+  id="orcamento"
+  className="bg-white py-20 text-center px-6 border-t border-gray-200"
+>
   <h2 className="text-3xl font-bold mb-8">Pedir Orçamento</h2>
-  <p className="text-gray-600 mb-10 max-w-2xl mx-auto">
-    Para pedidos com 3 ou mais máquinas, preencha o formulário abaixo e entraremos em contacto o mais breve possível.
+  <p className="text-gray-600 mb-10">
+    Preencha o formulário e entraremos em contacto para confirmar o agendamento.
   </p>
 
   <form
-    id="orcamentoForm"
+    onSubmit={handleSubmit}
     className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg text-left"
-    onSubmit={(e) => {
-      e.preventDefault();
-      emailjs
-        .sendForm(
-          "service_pjxsdwi", // 👉 Service ID
-          "template_default", // 👉 Substitui pelo ID do teu template
-          e.target,
-          "okg9eystknLnKS2hx" // 👉 Public Key
-        )
-        .then(() => {
-          alert("✅ Pedido enviado com sucesso! Entraremos em contacto em breve.");
-          e.target.reset();
-        })
-        .catch((error) => {
-          console.error("Erro ao enviar:", error);
-          alert("❌ Ocorreu um erro ao enviar o pedido. Tente novamente mais tarde.");
-        });
-    }}
   >
-    <div className="mb-4">
-      <label className="block text-sm font-semibold mb-1">Nome</label>
-      <input type="text" name="nome" className="w-full border border-gray-300 rounded-lg p-2" required />
-    </div>
+    <div className="grid md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-gray-700 mb-2">Nome</label>
+        <input
+          type="text"
+          name="nome"
+          required
+          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
+          placeholder="O seu nome completo"
+        />
+      </div>
 
-    <div className="mb-4">
-      <label className="block text-sm font-semibold mb-1">Email</label>
-      <input type="email" name="email" className="w-full border border-gray-300 rounded-lg p-2" required />
-    </div>
+      <div>
+        <label className="block text-gray-700 mb-2">E-mail</label>
+        <input
+          type="email"
+          name="email"
+          required
+          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
+          placeholder="exemplo@email.com"
+        />
+      </div>
 
-    <div className="mb-4">
-      <label className="block text-sm font-semibold mb-1">Contacto telefónico</label>
-      <input type="tel" name="telefone" className="w-full border border-gray-300 rounded-lg p-2" required />
-    </div>
+      <div>
+        <label className="block text-gray-700 mb-2">Telefone</label>
+        <input
+          type="tel"
+          name="telefone"
+          required
+          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
+          placeholder="Número de telefone"
+        />
+      </div>
 
-    <div className="mb-4">
-      <label className="block text-sm font-semibold mb-1">Morada</label>
-      <input type="text" name="morada" className="w-full border border-gray-300 rounded-lg p-2" />
-    </div>
-
-    <div className="mb-6">
-      <label className="block text-sm font-semibold mb-2">Número de Máquinas</label>
-      <div className="flex items-center gap-6">
-        <label className="flex items-center gap-2">
-          <input type="radio" name="maquinas" value="3 Máquinas" required />
-          <span>3 Máquinas</span>
-        </label>
-        <label className="flex items-center gap-2">
-          <input type="radio" name="maquinas" value="+3 Máquinas" />
-          <span>Mais de 3 Máquinas</span>
-        </label>
+      <div>
+        <label className="block text-gray-700 mb-2">Morada</label>
+        <input
+          type="text"
+          name="morada"
+          required
+          className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
+          placeholder="Rua, nº, localidade"
+        />
       </div>
     </div>
 
-    <div className="mb-6">
-      <label className="block text-sm font-semibold mb-1">Mensagem</label>
+    <div className="mt-4">
+      <label className="block text-gray-700 mb-2">Número de Máquinas</label>
+      <select
+        name="maquinas"
+        required
+        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
+      >
+        <option value="">Selecione...</option>
+        <option value="1 Máquina">1 Máquina</option>
+        <option value="2 Máquinas">2 Máquinas</option>
+        <option value="3 ou mais">3 ou mais</option>
+      </select>
+    </div>
+
+    <div className="mt-4">
+      <label className="block text-gray-700 mb-2">Mensagem</label>
       <textarea
         name="mensagem"
         rows="4"
-        className="w-full border border-gray-300 rounded-lg p-2"
-        placeholder="Ex: Pretendo orçamento para 4 unidades em moradia T3."
+        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
+        placeholder="Escreva aqui alguma observação..."
       ></textarea>
     </div>
 
     <button
       type="submit"
-      className="w-full text-white font-semibold py-3 rounded-lg transition"
+      className="w-full text-white font-semibold py-3 rounded-lg transition mt-6"
       style={{
-        backgroundColor: '#24799bff',
-        transition: 'all 0.3s ease',
+        backgroundColor: "#24799bff",
+        transition: "all 0.3s ease",
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#2c8ebd')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#24799bff')}
+      onMouseEnter={(e) =>
+        (e.currentTarget.style.backgroundColor = "#2c8ebd")
+      }
+      onMouseLeave={(e) =>
+        (e.currentTarget.style.backgroundColor = "#24799bff")
+      }
     >
       Enviar Pedido
     </button>
