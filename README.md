@@ -1,6 +1,6 @@
 # TEMPERIS — React + Vite (Vercel Ready)
 
-- Calendly: https://calendly.com/temperis
+- Calendly: https://calendly.com/temperisavac
 - WhatsApp: +351 969 337 121
 - Instagram: https://www.instagram.com/temperisavac/
 - Orçamentos via `/api/contact` (Nodemailer)
