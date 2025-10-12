@@ -82,23 +82,21 @@ useEffect(() => {
   return () => window.removeEventListener("message", onMessage);
 }, []);
 
-// === FUNÇÃO ABRIR CALENDLY ===
+// Função para abrir o Calendly
 const openCalendly = useCallback(() => {
   console.log("🟦 A tentar abrir Calendly...");
+  setShowOverlay(true);
 
-  const openPopup = () => {
-    if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
-      console.log("✅ Popup Calendly aberto");
-      setShowOverlay(true);
-      window.Calendly.initPopupWidget({ url: CALENDLY_URL });
-    } else {
-      console.warn("⚠️ Calendly ainda não disponível — a tentar novamente...");
-      setTimeout(openPopup, 400);
-    }
-  };
-
-  openPopup();
+  if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
+    window.Calendly.initPopupWidget({ url: CALENDLY_URL });
+    console.log("✅ Popup Calendly aberto");
+  } else {
+    console.warn("⚠️ Calendly não carregado ainda — abrindo em nova aba");
+    window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
+    setShowOverlay(false);
+  }
 }, []);
+
 
 
 
@@ -169,21 +167,15 @@ const openCalendly = useCallback(() => {
     <div className="flex flex-wrap gap-4">
       {/* Botão principal */}
       <button
-        onClick={() => {
-          const orcamentoEl = document.getElementById("orcamento");
-          if (orcamentoEl) {
-            orcamentoEl.scrollIntoView({ behavior: "smooth" });
-          } else if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
-            window.Calendly.initPopupWidget({ url: CALENDLY_URL });
-          } else {
-            window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
-          }
-        }}
-        className="px-8 py-3 font-semibold rounded-lg shadow text-white transition-transform hover:scale-[1.03]"
-        style={{ backgroundColor: '#005D83' }}
-      >
-        Agendar manutenção
-      </button>
+  onClick={openCalendly}
+  className="px-8 py-3 font-semibold rounded-lg shadow text-white transition-transform hover:scale-[1.03]"
+  style={{
+    backgroundColor: "#24799bff",
+  }}
+>
+  Agendar manutenção
+</button>
+
 
       {/* Botão secundário */}
       <button
