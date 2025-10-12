@@ -82,21 +82,33 @@ useEffect(() => {
   return () => window.removeEventListener("message", onMessage);
 }, []);
 
-// Função para abrir o Calendly
 const openCalendly = useCallback(() => {
   console.log("🟦 A tentar abrir Calendly...");
+
+  // Fecha qualquer overlay anterior (caso exista)
   setShowOverlay(true);
 
-  if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
-    window.Calendly.initPopupWidget({ url: CALENDLY_URL });
-    console.log("✅ Popup Calendly aberto");
-  } else {
-    console.warn("⚠️ Calendly não carregado ainda — abrindo em nova aba");
+  // Garante que o script do Calendly está carregado
+  if (!window.Calendly) {
+    console.warn("⚠️ Calendly ainda não carregado, abrindo em nova aba...");
     window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
     setShowOverlay(false);
+    return;
   }
-}, []);
 
+  try {
+    window.Calendly.initPopupWidget({ url: CALENDLY_URL });
+    console.log("✅ Popup Calendly aberto");
+  } catch (error) {
+    console.error("❌ Erro ao abrir Calendly:", error);
+    window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
+  }
+
+  // Fecha overlay se popup for fechado
+  window.addEventListener("message", (e) => {
+    if (e?.data?.event === "calendly.close") setShowOverlay(false);
+  });
+}, []);
 
 
 
@@ -439,9 +451,8 @@ const openCalendly = useCallback(() => {
         className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#24799bff]"
       >
         <option value="">Selecione...</option>
-        <option value="1 Máquina">1 Máquina</option>
-        <option value="2 Máquinas">2 Máquinas</option>
-        <option value="3 ou mais">3 ou mais</option>
+        <option value="3 Máquinas">3 Máquinas</option>
+        <option value="mais do que 3">mais do que 3 </option>
       </select>
     </div>
 
