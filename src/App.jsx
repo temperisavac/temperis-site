@@ -5,7 +5,7 @@ import whatsappIcon from "./assets/whatsapp.png";
 import gmailIcon from "./assets/gmail.png";
 import instagramIcon from "./assets/Instagram.png";
 import "./styles.css";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 const CALENDLY_URL = "https://calendly.com/temperisavac";
  
