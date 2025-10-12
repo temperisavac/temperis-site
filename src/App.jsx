@@ -92,8 +92,15 @@ const openCalendly = useCallback(() => {
       >
         <div className="flex items-center justify-between py-3 pl-12 pr-6 md:pl-20 max-w-7xl mx-auto">
           <div className="flex items-center gap-3 ml-2 md:ml-6">
-            <img src={logoUrl} alt="Temperis" className="h-14 w-auto object-contain" />
-            <span className="text-2xl font-bold text-gray-800 tracking-wide">TEMPERIS</span>
+            <div
+  onClick={() => window.location.href = "/"}
+  className="flex items-center gap-3 ml-2 md:ml-6 cursor-pointer select-none"
+  title="Voltar ao início"
+>
+  <img src={logoUrl} alt="Temperis" className="h-14 w-auto object-contain" />
+  <span className="text-2xl font-bold text-gray-800 tracking-wide">TEMPERIS</span>
+</div>
+
           </div>
 
           <nav className="hidden md:flex items-center gap-2">
