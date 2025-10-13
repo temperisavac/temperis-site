@@ -7,7 +7,7 @@ import instagramIcon from "./assets/Instagram.png";
 import "./styles.css";
 import emailjs from "@emailjs/browser";
 
-const CALENDLY_URL = "https://calendly.com/temperisavac";
+const CALENDLY_URL = "https://calendly.com/temperis-manutencao";
  
   export default function App() {
   const [showOverlay, setShowOverlay] = useState(false);
