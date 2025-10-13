@@ -60,7 +60,7 @@ useEffect(() => {
 
 
  /// === CALENDLY CONFIGURAÇÃO ===
-const CALENDLY_URL = "https://calendly.com/temperis-manutencao";
+const CALENDLY_URL = "https://calendly.com/temperisavac/temperis-manutencao";
 const [showCalendly, setShowCalendly] = useState(false);
 
 const openCalendly = useCallback(() => {
