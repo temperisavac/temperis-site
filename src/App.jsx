@@ -57,69 +57,21 @@ useEffect(() => {
 }, []);
 
 
- // === CALENDLY CONFIGURAÇÃO (VERSÃO VERCEL / VITE) ===
+ // === CALENDLY CONFIGURAÇÃO (VERSÃO FINAL COMPATÍVEL COM VERCEL / VITE) ===
 const CALENDLY_URL = "https://calendly.com/temperis";
 
-// Carrega o script do Calendly apenas uma vez
-useEffect(() => {
-  const scriptSrc = "https://assets.calendly.com/assets/external/widget.js";
+// === CALENDLY EMBED DIRETO (funciona 100% na Vercel) ===
+const [showCalendly, setShowCalendly] = useState(false);
 
-  const loadCalendly = () => {
-    if (!window.Calendly) {
-      const script = document.createElement("script");
-      script.src = scriptSrc;
-      script.async = true;
-      script.onload = () => console.log("✅ Calendly script carregado (com sucesso)");
-      document.body.appendChild(script);
-    } else {
-      console.log("ℹ️ Calendly já carregado");
-    }
-  };
-
-  // Carrega o Calendly *depois* de a página estar completamente pronta
-  if (document.readyState === "complete") {
-    loadCalendly();
-  } else {
-    window.addEventListener("load", loadCalendly);
-  }
-
-  // Fecha overlay quando o Calendly é fechado ou evento é agendado
-  const onMessage = (e) => {
-    if (
-      e?.data?.event === "calendly.event_scheduled" ||
-      e?.data?.event === "calendly.close"
-    ) {
-      setShowOverlay(false);
-    }
-  };
-
-  window.addEventListener("message", onMessage);
-  return () => window.removeEventListener("message", onMessage);
-}, []);
-
-// === Função de abertura do Calendly ===
 const openCalendly = useCallback(() => {
-  console.log("🟦 A tentar abrir Calendly...");
-
-  setShowOverlay(true);
-
-  // Espera que o Calendly esteja carregado
-  const tryOpen = () => {
-    if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
-      console.log("✅ Popup Calendly aberto");
-      window.Calendly.initPopupWidget({ url: CALENDLY_URL });
-    } else {
-      console.warn("⏳ Calendly ainda não disponível... a tentar de novo");
-      setTimeout(tryOpen, 400);
-    }
-  };
-
-  tryOpen();
+  console.log("🟦 Abrindo Calendly embutido...");
+  setShowCalendly(true);
 }, []);
 
-
-
-
+const closeCalendly = useCallback(() => {
+  console.log("❎ Fechando Calendly embutido...");
+  setShowCalendly(false);
+}, []);
 
 
   // ⬇️ Daqui para baixo é o layout visual do site
@@ -665,6 +617,33 @@ const openCalendly = useCallback(() => {
     © 2025 TEMPERIS. Todos os direitos reservados.
   </p>
 </footer>
+
+{/* === MODAL CALENDLY EMBUTIDO === */}
+{showCalendly && (
+  <div
+    className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] animate-fadeIn"
+    onClick={closeCalendly}
+  >
+    <div
+      className="relative bg-white rounded-2xl shadow-2xl w-[90%] md:w-[70%] h-[80%] overflow-hidden animate-fadeIn"
+      onClick={(e) => e.stopPropagation()} // evita fechar ao clicar dentro
+    >
+      <button
+        onClick={closeCalendly}
+        className="absolute top-3 right-3 text-gray-500 hover:text-black text-2xl font-bold z-10"
+      >
+        ✕
+      </button>
+
+      <iframe
+        src="https://calendly.com/temperis"
+        className="w-full h-full border-0"
+        title="Calendly Temperis"
+      ></iframe>
+    </div>
+  </div>
+)}
+
 
 
     </div>

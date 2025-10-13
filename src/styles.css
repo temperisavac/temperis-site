@@ -225,7 +225,24 @@ body {
   font-family: 'Inter', sans-serif;
   color: #005D83;
   overflow-x: hidden;
+
+  @keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
+
+.animate-fadeIn {
+  animation: fadeInZoom 0.3s ease forwards;
+}
+
+}
+
 
 
 
