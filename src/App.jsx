@@ -86,6 +86,7 @@ const closeCalendly = useCallback(() => {
           scrolled ? "bg-white/80 shadow-md" : "bg-white/100 shadow-none"
         }`}
       >
+
         <div className="flex items-center justify-between py-3 pl-12 pr-6 md:pl-20 max-w-7xl mx-auto">
           <div className="flex items-center gap-3 ml-2 md:ml-6">
             <div
@@ -166,10 +167,12 @@ const closeCalendly = useCallback(() => {
   {/* Imagem à direita */}
   <div className="md:w-1/2 flex justify-center mt-8 md:mt-0">
     <img
-      src={heroUrl}
-      alt="Sistemas AVAC"
-      className="rounded-2xl shadow-lg w-[85%] max-w-lg object-cover"
-    />
+  src={heroUrl}
+  alt="Sistemas AVAC"
+  className="w-[85%] max-w-lg object-cover rounded-none shadow-none border-none"
+  style={{ boxShadow: "none", border: "none" }}
+/>
+
   </div>
 </section>
 
