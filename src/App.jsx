@@ -57,10 +57,8 @@ useEffect(() => {
 }, []);
 
 
- // === CALENDLY CONFIGURAÇÃO (VERSÃO FINAL COMPATÍVEL COM VERCEL / VITE) ===
-const CALENDLY_URL = "https://calendly.com/temperis";
-
-// === CALENDLY EMBED DIRETO (funciona 100% na Vercel) ===
+ /// === CALENDLY CONFIGURAÇÃO ===
+const CALENDLY_URL = "https://calendly.com/temperis-manutencao";
 const [showCalendly, setShowCalendly] = useState(false);
 
 const openCalendly = useCallback(() => {
@@ -69,9 +67,10 @@ const openCalendly = useCallback(() => {
 }, []);
 
 const closeCalendly = useCallback(() => {
-  console.log("❎ Fechando Calendly embutido...");
+  console.log("❎ Fechando Calendly...");
   setShowCalendly(false);
 }, []);
+
 
 
   // ⬇️ Daqui para baixo é o layout visual do site
@@ -618,7 +617,7 @@ const closeCalendly = useCallback(() => {
   </p>
 </footer>
 
-{/* === MODAL CALENDLY EMBUTIDO === */}
+{/* === POPUP CALENDLY EMBUTIDO === */}
 {showCalendly && (
   <div
     className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] animate-fadeIn"
@@ -636,13 +635,14 @@ const closeCalendly = useCallback(() => {
       </button>
 
       <iframe
-        src="https://calendly.com/temperis"
+        src={CALENDLY_URL}
         className="w-full h-full border-0"
         title="Calendly Temperis"
       ></iframe>
     </div>
   </div>
 )}
+
 
 
 
