@@ -57,27 +57,33 @@ useEffect(() => {
 }, []);
 
 
- // === CALENDLY CONFIGURAÇÃO ===
+ // === CALENDLY CONFIGURAÇÃO (VERSÃO VERCEL / VITE) ===
 const CALENDLY_URL = "https://calendly.com/temperis";
 
-// Carrega o script do Calendly apenas uma vez e garante que está pronto
+// Carrega o script do Calendly apenas uma vez
 useEffect(() => {
   const scriptSrc = "https://assets.calendly.com/assets/external/widget.js";
 
-  // ✅ Carrega o script se ainda não estiver carregado
-  if (!document.querySelector(`script[src="${scriptSrc}"]`)) {
-    const script = document.createElement("script");
-    script.src = scriptSrc;
-    script.async = true;
-    script.onload = () => {
-      console.log("✅ Calendly script carregado com sucesso");
-    };
-    document.body.appendChild(script);
+  const loadCalendly = () => {
+    if (!window.Calendly) {
+      const script = document.createElement("script");
+      script.src = scriptSrc;
+      script.async = true;
+      script.onload = () => console.log("✅ Calendly script carregado (com sucesso)");
+      document.body.appendChild(script);
+    } else {
+      console.log("ℹ️ Calendly já carregado");
+    }
+  };
+
+  // Carrega o Calendly *depois* de a página estar completamente pronta
+  if (document.readyState === "complete") {
+    loadCalendly();
   } else {
-    console.log("ℹ️ Calendly já estava carregado");
+    window.addEventListener("load", loadCalendly);
   }
 
-  // ✅ Fecha overlay quando Calendly fecha ou quando o evento é agendado
+  // Fecha overlay quando o Calendly é fechado ou evento é agendado
   const onMessage = (e) => {
     if (
       e?.data?.event === "calendly.event_scheduled" ||
@@ -91,31 +97,26 @@ useEffect(() => {
   return () => window.removeEventListener("message", onMessage);
 }, []);
 
-// === ABRIR CALENDLY COM OVERLAY FUNCIONAL ===
+// === Função de abertura do Calendly ===
 const openCalendly = useCallback(() => {
   console.log("🟦 A tentar abrir Calendly...");
 
-  // Mostra overlay
   setShowOverlay(true);
 
-  // Tenta abrir Calendly assim que o script estiver disponível
+  // Espera que o Calendly esteja carregado
   const tryOpen = () => {
     if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
-      console.log("✅ Calendly disponível — a abrir popup");
-      window.Calendly.initPopupWidget({
-        url: CALENDLY_URL,
-        parentElement: document.getElementById("calendly-container"),
-        prefill: {},
-        utm: {},
-      });
+      console.log("✅ Popup Calendly aberto");
+      window.Calendly.initPopupWidget({ url: CALENDLY_URL });
     } else {
-      console.warn("⏳ Calendly ainda a carregar... tentando novamente em 300ms");
-      setTimeout(tryOpen, 300);
+      console.warn("⏳ Calendly ainda não disponível... a tentar de novo");
+      setTimeout(tryOpen, 400);
     }
   };
 
   tryOpen();
 }, []);
+
 
 
 
