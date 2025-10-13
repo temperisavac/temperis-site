@@ -60,20 +60,29 @@ useEffect(() => {
  // === CALENDLY CONFIGURAÇÃO ===
 const CALENDLY_URL = "https://calendly.com/temperis";
 
-// Carrega o script do Calendly apenas uma vez
+// Carrega o script do Calendly apenas uma vez e garante que está pronto
 useEffect(() => {
   const scriptSrc = "https://assets.calendly.com/assets/external/widget.js";
+
+  // ✅ Carrega o script se ainda não estiver carregado
   if (!document.querySelector(`script[src="${scriptSrc}"]`)) {
     const script = document.createElement("script");
     script.src = scriptSrc;
     script.async = true;
-    script.onload = () => console.log("✅ Calendly carregado");
+    script.onload = () => {
+      console.log("✅ Calendly script carregado com sucesso");
+    };
     document.body.appendChild(script);
+  } else {
+    console.log("ℹ️ Calendly já estava carregado");
   }
 
-  // Fecha overlay quando o Calendly fecha ou o evento é agendado
+  // ✅ Fecha overlay quando Calendly fecha ou quando o evento é agendado
   const onMessage = (e) => {
-    if (e?.data?.event === "calendly.event_scheduled" || e?.data?.event === "calendly.close") {
+    if (
+      e?.data?.event === "calendly.event_scheduled" ||
+      e?.data?.event === "calendly.close"
+    ) {
       setShowOverlay(false);
     }
   };
@@ -82,32 +91,30 @@ useEffect(() => {
   return () => window.removeEventListener("message", onMessage);
 }, []);
 
+// === ABRIR CALENDLY COM OVERLAY FUNCIONAL ===
 const openCalendly = useCallback(() => {
   console.log("🟦 A tentar abrir Calendly...");
 
-  // Fecha qualquer overlay anterior (caso exista)
+  // Mostra overlay
   setShowOverlay(true);
 
-  // Garante que o script do Calendly está carregado
-  if (!window.Calendly) {
-    console.warn("⚠️ Calendly ainda não carregado, abrindo em nova aba...");
-    window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
-    setShowOverlay(false);
-    return;
-  }
+  // Tenta abrir Calendly assim que o script estiver disponível
+  const tryOpen = () => {
+    if (window.Calendly && typeof window.Calendly.initPopupWidget === "function") {
+      console.log("✅ Calendly disponível — a abrir popup");
+      window.Calendly.initPopupWidget({
+        url: CALENDLY_URL,
+        parentElement: document.getElementById("calendly-container"),
+        prefill: {},
+        utm: {},
+      });
+    } else {
+      console.warn("⏳ Calendly ainda a carregar... tentando novamente em 300ms");
+      setTimeout(tryOpen, 300);
+    }
+  };
 
-  try {
-    window.Calendly.initPopupWidget({ url: CALENDLY_URL });
-    console.log("✅ Popup Calendly aberto");
-  } catch (error) {
-    console.error("❌ Erro ao abrir Calendly:", error);
-    window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
-  }
-
-  // Fecha overlay se popup for fechado
-  window.addEventListener("message", (e) => {
-    if (e?.data?.event === "calendly.close") setShowOverlay(false);
-  });
+  tryOpen();
 }, []);
 
 
@@ -493,10 +500,10 @@ const openCalendly = useCallback(() => {
   <div className="relative w-full overflow-hidden">
     <div id="carrossel" className="flex gap-8 animate-scrollLoop scroll-smooth">
       {[
-        { nome: "Carlos Mendes", texto: "Serviço excelente! Noto diferença na conta da luz.", img: "https://randomuser.me/api/portraits/men/32.jpg" },
+        { nome: "Carlos Mendes", texto: "Serviço excelente! Já Noto diferença na conta da luz.", img: "https://randomuser.me/api/portraits/men/32.jpg" },
         { nome: "Ana Silva", texto: "Profissionais impecáveis e muito simpáticos!", img: "https://randomuser.me/api/portraits/women/44.jpg" },
         { nome: "Rui Ferreira", texto: "Recomendo totalmente. Serviço rápido e de qualidade.", img: "https://randomuser.me/api/portraits/men/28.jpg" },
-        { nome: "Patrícia Lopes", texto: "Serviço impecável! A minha casa ficou a respirar melhor.", img: "https://randomuser.me/api/portraits/women/65.jpg" },
+        { nome: "Patrícia Lopes", texto: "Ótimo serviço prestado a nivel de sitemas, montei uma loja e a Temperis ajudou-me a decidir o melhor sistema.", img: "https://randomuser.me/api/portraits/women/65.jpg" },
         { nome: "João Pereira", texto: "Excelente atendimento e resultados visíveis no desempenho do AC.", img: "https://randomuser.me/api/portraits/men/46.jpg" },
         { nome: "Marta Gomes", texto: "A equipa foi pontual, rápida e muito cuidadosa. 5 estrelas!", img: "https://randomuser.me/api/portraits/women/21.jpg" },
         { nome: "Tiago Nunes", texto: "Já contratei a TEMPERIS duas vezes — recomendo vivamente!", img: "https://randomuser.me/api/portraits/men/56.jpg" },
@@ -509,7 +516,7 @@ const openCalendly = useCallback(() => {
           { nome: "Carlos Mendes", texto: "Serviço excelente! Noto diferença na conta da luz.", img: "https://randomuser.me/api/portraits/men/32.jpg" },
           { nome: "Ana Silva", texto: "Profissionais impecáveis e muito simpáticos!", img: "https://randomuser.me/api/portraits/women/44.jpg" },
           { nome: "Rui Ferreira", texto: "Recomendo totalmente. Serviço rápido e de qualidade.", img: "https://randomuser.me/api/portraits/men/28.jpg" },
-          { nome: "Patrícia Lopes", texto: "Serviço impecável! A minha casa ficou a respirar melhor.", img: "https://randomuser.me/api/portraits/women/65.jpg" },
+          { nome: "Patrícia Lopes", texto: "Ótimo serviço prestado a nivel de sitemas, montei uma loja e a Temperis ajudou-me a decidir o melhor sistema.", img: "https://randomuser.me/api/portraits/women/65.jpg" },
           { nome: "João Pereira", texto: "Excelente atendimento e resultados visíveis no desempenho do AC.", img: "https://randomuser.me/api/portraits/men/46.jpg" },
           { nome: "Marta Gomes", texto: "A equipa foi pontual, rápida e muito cuidadosa. 5 estrelas!", img: "https://randomuser.me/api/portraits/women/21.jpg" },
           { nome: "Tiago Nunes", texto: "Já contratei a TEMPERIS duas vezes — recomendo vivamente!", img: "https://randomuser.me/api/portraits/men/56.jpg" },
@@ -637,15 +644,20 @@ const openCalendly = useCallback(() => {
       </div>
 
       {/* OVERLAY CALENDLY */}
-      {showOverlay && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn z-50"
-          onClick={() => {
-            setShowOverlay(false);
-            if (window.Calendly) window.Calendly.closePopupWidget();
-          }}
-        />
-      )}
+{showOverlay && (
+  <div
+    className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn z-[60] flex items-center justify-center"
+    onClick={() => {
+      setShowOverlay(false);
+      if (window.Calendly?.closePopupWidget)
+        window.Calendly.closePopupWidget();
+    }}
+  >
+    {/* Contêiner invisível para renderizar Calendly acima do overlay */}
+    <div id="calendly-container" className="relative z-[70]" />
+  </div>
+)}
+
  {/* RODAPÉ AJUSTADO */}
 <footer className="w-full text-right pr-6 pb-2 mt-8">
   <p className="text-xs text-black tracking-wide">
